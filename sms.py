@@ -6,7 +6,7 @@ import sys
 username = raw_input("Enter Username: ")
 passwd = getpass()
 message = raw_input("Enter Message: ")
-number = raw_input("Enter Mobile number:
+number = raw_input("94774593440:
  ")
 mes
 sage = "+".join(message.split(' '))
